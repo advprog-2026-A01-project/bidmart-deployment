@@ -1,37 +1,47 @@
 # BidMart Deployment
 
-This repository contains deployment configuration for the BidMart microservice architecture.
+Repository ini berisi konfigurasi deployment untuk arsitektur microservice BidMart.
+
+Tujuan utama repository ini adalah menyediakan satu tempat untuk menjalankan service-service utama BidMart secara terintegrasi menggunakan Docker Compose.
 
 ## Core Stack
 
-The current core Docker Compose stack runs:
+Untuk tahap saat ini, stack utama yang dijalankan adalah:
 
 - `frontend-bidmart`
 - `bidmart-api-gateway`
 - `bidmart-auth-service`
 - `auth-db`
 
-## Architecture
+Service lain seperti `bidmart-catalog-service`, `bidmart-auction-wallet-service`, RabbitMQ, Prometheus, dan Grafana akan ditambahkan setelah core Auth flow stabil.
 
-External/public communication:
+## Arsitektur
+
+Komunikasi eksternal:
 
 ~~~text
 User Browser -> frontend-bidmart -> bidmart-api-gateway
 ~~~
 
-Internal service-to-service communication:
+Komunikasi internal antar-service:
 
 ~~~text
 bidmart-api-gateway -> bidmart-auth-service via gRPC
 ~~~
 
-Database communication:
+Komunikasi database:
 
 ~~~text
 bidmart-auth-service -> auth-db
 ~~~
 
-## Run Locally
+Dengan arsitektur ini, frontend tidak memanggil Auth Service secara langsung. Semua request dari frontend masuk melalui API Gateway.
+
+## Cara Menjalankan Local Deployment
+
+Pastikan Docker dan Docker Compose sudah terinstall.
+
+Dari repository ini, jalankan:
 
 ~~~bash
 cp .env.example .env
@@ -39,7 +49,15 @@ docker compose up -d --build
 ./scripts/smoke-docker-compose.sh
 ~~~
 
-## URLs
+Jika ingin menjalankan ulang dari kondisi bersih:
+
+~~~bash
+docker compose down -v --remove-orphans
+docker compose up -d --build
+./scripts/smoke-docker-compose.sh
+~~~
+
+## URL Local
 
 ~~~text
 Frontend:     http://localhost:5173
@@ -56,11 +74,13 @@ username: admin
 password: admin12345
 ~~~
 
-## Important Docker Networking Rule
+## Aturan Penting Docker Networking
 
-Inside Docker Compose, services must communicate using Docker service names, not `localhost`.
+Di dalam Docker Compose, antar-container tidak boleh menggunakan `localhost`.
 
-Correct:
+Gunakan nama service Docker.
+
+Benar:
 
 ~~~text
 API Gateway -> http://bidmart-auth-service:8081
@@ -68,33 +88,92 @@ API Gateway -> bidmart-auth-service:9091
 Auth Service -> jdbc:postgresql://auth-db:5432/auth_db
 ~~~
 
-Wrong:
+Salah:
 
 ~~~text
 API Gateway -> http://localhost:8081
 Auth Service -> jdbc:postgresql://localhost:5434/auth_db
 ~~~
 
-## Smoke Test Coverage
+Alasannya, `localhost` di dalam container berarti container itu sendiri, bukan host laptop dan bukan container lain.
 
-The smoke test validates:
+## Smoke Test
 
-- API Gateway health endpoint
-- Frontend availability
-- Auth DB ping through Gateway
-- Captcha issuance through Gateway
-- Login through Gateway
-- Protected endpoint through Gateway
-- API Gateway to Auth Service gRPC status
+Smoke test digunakan untuk memastikan stack Docker Compose berjalan dengan benar.
 
-Run:
+Jalankan:
 
 ~~~bash
 ./scripts/smoke-docker-compose.sh
 ~~~
 
-## Current Scope
+Smoke test memvalidasi:
 
-This deployment stack intentionally starts with the core Auth flow first.
+- API Gateway health endpoint
+- Frontend dapat diakses
+- Auth DB ping melalui Gateway
+- Captcha issuance melalui Gateway
+- Login admin melalui Gateway
+- Protected endpoint melalui Gateway
+- Komunikasi internal API Gateway ke Auth Service melalui gRPC
 
-Catalog Service, Auction-Wallet Service, RabbitMQ, Prometheus, and Grafana can be added after the core stack is stable.
+## Troubleshooting
+
+### Container name conflict
+
+Jika muncul error seperti:
+
+~~~text
+Conflict. The container name "/bidmart-auth-db" is already in use
+~~~
+
+hapus container lama:
+
+~~~bash
+docker compose down -v --remove-orphans
+docker rm -f bidmart-auth-db 2>/dev/null || true
+docker rm -f bidmart-db-1 2>/dev/null || true
+docker compose up -d --build
+~~~
+
+### Melihat status container
+
+~~~bash
+docker compose ps
+~~~
+
+### Melihat logs Auth Service
+
+~~~bash
+docker compose logs --tail=200 bidmart-auth-service
+~~~
+
+### Melihat logs API Gateway
+
+~~~bash
+docker compose logs --tail=200 bidmart-api-gateway
+~~~
+
+### Melihat logs Frontend
+
+~~~bash
+docker compose logs --tail=200 frontend-bidmart
+~~~
+
+## File Environment
+
+File `.env.example` berisi contoh environment variable yang dibutuhkan untuk local deployment.
+
+File `.env` digunakan untuk konfigurasi lokal dan tidak boleh di-commit.
+
+## Catatan Scope Saat Ini
+
+Deployment ini fokus pada core Auth flow terlebih dahulu:
+
+~~~text
+Frontend -> API Gateway -> Auth Service -> Auth DB
+                       |
+                       +-> Auth Service via gRPC
+~~~
+
+Service Catalog, Auction-Wallet, RabbitMQ, Monitoring, dan Performance Testing akan ditambahkan pada phase berikutnya.
