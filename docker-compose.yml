@@ -1,0 +1,99 @@
+name: bidmart
+
+services:
+  auth-db:
+    image: postgres:16-alpine
+    container_name: bidmart-auth-db
+    environment:
+      POSTGRES_DB: ${AUTH_DB_NAME:-auth_db}
+      POSTGRES_USER: ${AUTH_DB_USER:-auth}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD:-auth}
+    ports:
+      - "${AUTH_DB_HOST_PORT:-5434}:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    networks:
+      - bidmart-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER:-auth} -d ${AUTH_DB_NAME:-auth_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  bidmart-auth-service:
+    build:
+      context: ../bidmart-auth-service
+    container_name: bidmart-auth-service
+    environment:
+      PORT: 8081
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/${AUTH_DB_NAME:-auth_db}
+      SPRING_DATASOURCE_USERNAME: ${AUTH_DB_USER:-auth}
+      SPRING_DATASOURCE_PASSWORD: ${AUTH_DB_PASSWORD:-auth}
+
+      ADMIN_BOOTSTRAP_ENABLED: ${ADMIN_BOOTSTRAP_ENABLED:-true}
+      ADMIN_BOOTSTRAP_USERNAME: ${ADMIN_BOOTSTRAP_USERNAME:-admin}
+      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD:-admin12345}
+
+      JWT_ISSUER: ${JWT_ISSUER:-http://localhost:8081}
+      JWT_KEY_ID: ${JWT_KEY_ID:-bidmart-auth-local-key-1}
+      JWT_ACCESS_TOKEN_TTL_MINUTES: ${JWT_ACCESS_TOKEN_TTL_MINUTES:-15}
+      AUTH_ACCESS_TTL_MINUTES: ${AUTH_ACCESS_TTL_MINUTES:-15}
+
+      AUTH_GRPC_PORT: 9091
+
+      JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64:-}
+      JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64:-}
+    ports:
+      - "8081:8081"
+      - "9091:9091"
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    networks:
+      - bidmart-net
+
+  bidmart-api-gateway:
+    build:
+      context: ../bidmart-api-gateway
+    container_name: bidmart-api-gateway
+    environment:
+      PORT: 8080
+
+      AUTH_SERVICE_BASE_URL: http://bidmart-auth-service:8081
+      JWT_JWK_SET_URI: http://bidmart-auth-service:8081/.well-known/jwks.json
+
+      AUTH_GRPC_HOST: bidmart-auth-service
+      AUTH_GRPC_PORT: 9091
+
+      CATALOG_SERVICE_BASE_URL: http://bidmart-catalog-service:8082
+      AUCTION_WALLET_SERVICE_BASE_URL: http://bidmart-auction-wallet-service:8083
+
+      FRONTEND_ORIGIN: http://localhost:5173
+      GATEWAY_SECRET: ${GATEWAY_SECRET:-local-dev-gateway-secret}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - bidmart-auth-service
+    networks:
+      - bidmart-net
+
+  frontend-bidmart:
+    build:
+      context: ../frontend-bidmart
+      args:
+        VITE_API_BASE_URL: ""
+    container_name: frontend-bidmart
+    ports:
+      - "5173:80"
+    depends_on:
+      - bidmart-api-gateway
+    networks:
+      - bidmart-net
+
+volumes:
+  auth_db_data:
+
+networks:
+  bidmart-net:
+    driver: bridge
