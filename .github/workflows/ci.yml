@@ -1,0 +1,67 @@
+name: Deployment CI
+
+on:
+  push:
+    branches:
+      - main
+      - "ci/**"
+      - "chore/**"
+      - "tdd/**"
+  pull_request:
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout deployment repository
+        uses: actions/checkout@v4
+        with:
+          path: BidMart-Microservices/bidmart-deployment
+
+      - name: Checkout auth service
+        uses: actions/checkout@v4
+        with:
+          repository: advprog-2026-A01-project/bidmart-auth-service
+          path: BidMart-Microservices/bidmart-auth-service
+
+      - name: Checkout api gateway
+        uses: actions/checkout@v4
+        with:
+          repository: advprog-2026-A01-project/bidmart-api-gateway
+          path: BidMart-Microservices/bidmart-api-gateway
+
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          repository: advprog-2026-A01-project/frontend-bidmart
+          path: BidMart-Microservices/frontend-bidmart
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Create local env
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: cp .env.example .env
+
+      - name: Validate Docker Compose config
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: docker compose config
+
+      - name: Start Docker Compose stack
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: docker compose up -d --build
+
+      - name: Run Docker Compose smoke test
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: ./scripts/smoke-docker-compose.sh
+
+      - name: Dump logs on failure
+        if: failure()
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: docker compose logs --tail=200
+
+      - name: Stop Docker Compose stack
+        if: always()
+        working-directory: BidMart-Microservices/bidmart-deployment
+        run: docker compose down -v --remove-orphans
