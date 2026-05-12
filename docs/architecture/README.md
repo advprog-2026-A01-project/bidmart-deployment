@@ -131,6 +131,7 @@ Pada rancangan ini, `bidmart-api-gateway` tetap menjadi **single public backend 
 
 ### Alur Komunikasi Future Container
 
+
 ```text
 User Browser
     -> frontend-bidmart
