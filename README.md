@@ -178,3 +178,12 @@ Frontend -> API Gateway -> Auth Service -> Auth DB
 ~~~
 
 Service Catalog, Auction-Wallet, RabbitMQ, Monitoring, dan Performance Testing akan ditambahkan pada phase berikutnya.
+
+## Future Architecture: Scaling to National Success
+Seiring dengan proyeksi pertumbuhan BidMart menjadi platform lelang skala nasional dengan ribuan transaksi per detik, arsitektur sistem akan berevolusi menjadi Fully Distributed Microservices.
+
+### Transformasi Utama:
+- Full Service Decoupling: Melakukan pemisahan fungsionalitas secara total pada modul lelang dan dompet digital (wallet) menjadi `Auction Service` dan `Wallet Service` yang independen demi kemudahan skalabilitas.
+- Event-Driven Messaging: Mengimplementasikan RabbitMQ/Kafka sebagai penyedia jalur komunikasi asinkron. Hal ini memungkinkan sistem untuk mengelola lonjakan penawaran (bid) dalam jumlah besar tanpa mengganggu performa layanan utama.
+- Real-time Performance Optimization: Pemanfaatan Redis Caching untuk menyimpan status harga tertinggi secara sementara. Ini memastikan pengguna mendapatkan pembaruan data dalam waktu sub-milidetik, sangat krusial untuk persaingan lelang di detik-detik terakhir.
+- Database Isolation: Transisi penuh ke pola Database per Service untuk memastikan kegagalan pada satu skema data tidak akan melumpuhkan seluruh ekosistem layanan.
