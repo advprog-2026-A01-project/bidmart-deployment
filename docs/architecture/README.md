@@ -1,29 +1,62 @@
-## Container Diagram
+# Tutorial B: Visualizing and Architectural Risk - BidMart
+
+Dokumentasi ini dibuat untuk memenuhi Tutorial B: **Visualizing and Architectural Risk** pada proyek BidMart A01. Repository `bidmart-deployment` digunakan sebagai pusat dokumentasi arsitektur karena repository ini berisi konfigurasi deployment dan integrasi service utama BidMart.
+
+---
 
 ## Anggota Kelompok
 
 **BidMart A01 - Advance Programming A**
 
-1. Neal Guarddin - 2406348282
-2. Go Nadine Audelia - 2406348774
-3. Renata Gracia - 2406399705
-4. Sahila Khairatul Athia - 2406495716
-> Bagian ini menjelaskan **container-level architecture** BidMart pada kondisi saat ini dan rancangan masa depan setelah risk storming.
-
-Container diagram digunakan untuk menunjukkan:
-
-- aplikasi/service utama yang membentuk sistem;
-- hubungan komunikasi antar-container;
-- batas tanggung jawab antar-service;
-- perbedaan antara current architecture dan future architecture.
+| No. | Nama | NPM |
+|---:|---|---|
+| 1 | Neal Guarddin | 2406348282 |
+| 2 | Go Nadine Audelia | 2406348774 |
+| 3 | Renata Gracia | 2406399705 |
+| 4 | Sahila Khairatul Athia | 2406495716 |
 
 ---
 
-## Current Container Diagram
+## Ringkasan Arsitektur
+
+BidMart saat ini sudah memiliki core microservice deployment yang berfokus pada alur autentikasi:
+
+```text
+frontend-bidmart -> bidmart-api-gateway -> bidmart-auth-service -> auth-db
+```
+
+Arsitektur masa depan memperluas core stack tersebut dengan menambahkan service lain seperti Catalog Service, Auction-Wallet Service, database masing-masing service, asynchronous messaging, dan monitoring.
+
+---
+
+## Daftar Diagram
+
+| Bagian | File |
+|---|---|
+| Current Context Diagram | `images/01-current-context.png` |
+| Current Container Diagram | `images/02-current-container.png` |
+| Current Deployment Diagram | `images/03-current-deployment.png` |
+| Future Context Diagram | `images/04-future-context.png` |
+| Future Container Diagram | `images/05-future-container.png` |
+| Future Deployment Diagram | `images/06-future-deployment.png` |
+
+---
+
+# 1. Current Architecture
+
+## 1.1 Current Context Diagram
+
+> TODO: Bagian ini diisi oleh anggota yang mengerjakan context diagram.
+
+![Current Context Diagram](images/01-current-context.png)
+
+Current context diagram menjelaskan posisi BidMart sebagai sistem yang digunakan oleh pengguna. Diagram ini menampilkan hubungan antara user, browser, dan sistem BidMart pada kondisi saat ini.
+
+---
+
+## 1.2 Current Container Diagram
 
 ![Current Container Diagram](images/02-current-container.png)
-
-### Deskripsi Singkat
 
 Current container diagram menggambarkan **core deployment BidMart** yang saat ini menjadi fokus utama pada repository `bidmart-deployment`.
 
@@ -36,7 +69,7 @@ Pada tahap ini, sistem berfokus pada **core Auth flow** yang terdiri dari:
 | `bidmart-auth-service` | Menangani authentication, authorization, dan token/session logic |
 | `auth-db` | Menyimpan data autentikasi |
 
-### Alur Komunikasi
+### Alur Komunikasi Current Container
 
 ```text
 User Browser
@@ -46,9 +79,9 @@ User Browser
     -> auth-db
 ```
 
-### Penjelasan Alur
+### Penjelasan Current Container
 
-- **Frontend tidak memanggil Auth Service secara langsung.**
+- Frontend tidak memanggil Auth Service secara langsung.
 - Semua request dari frontend diarahkan terlebih dahulu ke `bidmart-api-gateway`.
 - API Gateway kemudian meneruskan request autentikasi ke `bidmart-auth-service` melalui komunikasi internal.
 - Auth Service mengakses `auth-db` untuk kebutuhan data autentikasi.
@@ -56,9 +89,7 @@ User Browser
 
 ### Batasan Current Architecture
 
-Current architecture masih terbatas pada core Auth flow.
-
-Service berikut belum menjadi bagian utama dari deployment stabil saat ini:
+Current architecture masih terbatas pada core Auth flow. Service berikut belum menjadi bagian utama dari deployment stabil saat ini:
 
 - `bidmart-catalog-service`
 - `bidmart-auction-wallet-service`
@@ -68,17 +99,37 @@ Service berikut belum menjadi bagian utama dari deployment stabil saat ini:
 
 ---
 
-## Future Container Diagram
+## 1.3 Current Deployment Diagram
+
+> TODO: Bagian ini diisi oleh anggota yang mengerjakan deployment diagram.
+
+![Current Deployment Diagram](images/03-current-deployment.png)
+
+Current deployment diagram menjelaskan bagaimana komponen current architecture dijalankan pada environment deployment saat ini, terutama melalui Docker Compose di repository `bidmart-deployment`.
+
+---
+
+# 2. Future Architecture After Risk Storming
+
+## 2.1 Future Context Diagram
+
+> TODO: Bagian ini diisi oleh anggota yang mengerjakan future context diagram.
+
+![Future Context Diagram](images/04-future-context.png)
+
+Future context diagram menjelaskan posisi BidMart sebagai sistem microservice-based yang lebih lengkap setelah dilakukan risk storming.
+
+---
+
+## 2.2 Future Container Diagram
 
 ![Future Container Diagram](images/05-future-container.png)
-
-### Deskripsi Singkat
 
 Future container diagram menggambarkan pengembangan BidMart menuju **microservice architecture** yang lebih lengkap.
 
 Pada rancangan ini, `bidmart-api-gateway` tetap menjadi **single public backend entry point**, tetapi gateway tidak hanya meneruskan request ke Auth Service. Gateway juga meneruskan request ke service lain sesuai domain fitur.
 
-### Alur Komunikasi
+### Alur Komunikasi Future Container
 
 ```text
 User Browser
@@ -121,7 +172,90 @@ Future architecture juga membuka ruang untuk penambahan komponen pendukung seper
 
 ---
 
-## Container Diagram Summary
+## 2.3 Future Deployment Diagram
+
+> TODO: Bagian ini diisi oleh anggota yang mengerjakan future deployment diagram.
+
+![Future Deployment Diagram](images/06-future-deployment.png)
+
+Future deployment diagram menjelaskan bagaimana service-service BidMart dapat dijalankan pada environment deployment yang lebih lengkap setelah Catalog Service, Auction-Wallet Service, messaging, dan monitoring ditambahkan.
+
+---
+
+# 3. Risk Storming Explanation
+
+> TODO: Bagian ini diisi oleh anggota yang mengerjakan risk storming explanation.
+
+Risk storming diterapkan untuk mengevaluasi risiko dari arsitektur BidMart saat ini. Pada current architecture, sistem sudah mulai dipisahkan dari monolith menjadi core microservice flow, yaitu Frontend, API Gateway, Auth Service, dan Auth DB. Namun, arsitektur ini masih berada pada tahap awal karena service Catalog, Auction-Wallet, messaging, dan monitoring belum sepenuhnya menjadi bagian dari deployment terintegrasi.
+
+Risiko utama pada current architecture adalah API Gateway menjadi titik pusat seluruh request, Auth Service menjadi dependency utama untuk alur autentikasi, dan belum adanya observability yang cukup ketika terjadi error antar-service. Selain itu, ketika Catalog dan Auction-Wallet mulai diintegrasikan, komunikasi antar-service dapat menimbulkan risiko baru seperti cascading failure, data inconsistency, dan kesulitan debugging jika tidak ada event bus dan monitoring.
+
+## Hasil Risk Storming
+
+| Risiko pada Current Architecture | Dampak | Modifikasi pada Future Architecture |
+|---|---|---|
+| API Gateway menjadi pusat semua request | Gateway dapat menjadi bottleneck dan single entry risk | Gateway tetap menjadi entry point, tetapi routing diperjelas ke service yang terpisah |
+| Core deployment baru stabil pada Auth flow | Catalog dan Auction-Wallet belum terintegrasi penuh | Menambahkan Catalog Service dan Auction-Wallet Service ke rancangan deployment |
+| Auth, Catalog, dan Auction memiliki kebutuhan data berbeda | Ownership data kurang jelas jika data digabung | Setiap service memiliki database masing-masing |
+| Komunikasi antar-service dapat menyebabkan cascading failure | Error pada satu service dapat memengaruhi service lain | Menggunakan komunikasi asynchronous melalui RabbitMQ untuk event tertentu |
+| Event penting seperti bid update atau auction update sulit disebarkan | Service lain sulit menerima perubahan state secara reliable | Menambahkan event bus untuk publish/consume event |
+| Runtime error sulit didiagnosis | Debugging dan evaluasi reliability menjadi sulit | Menambahkan Prometheus dan Grafana untuk observability |
+| Deployment semakin kompleks saat service bertambah | Konfigurasi environment dan networking rawan salah | Repository deployment menjadi pusat konfigurasi Docker Compose |
+
+---
+
+# 4. Individual Work
+
+> TODO: Bagian ini diisi oleh masing-masing anggota sesuai kontribusi individual.
+
+Bagian individual menjelaskan component diagram dan code diagram dari kontribusi masing-masing anggota. Setiap anggota dapat menambahkan subsection masing-masing dengan format berikut.
+
+---
+
+## 4.1 Neal Guarddin
+
+### Fokus Kontribusi
+
+| Area | Repository | Kontribusi |
+|---|---|---|
+| Frontend | `frontend-bidmart` | Alur autentikasi dari UI menuju API Gateway |
+| API Gateway | `bidmart-api-gateway` | Public entry point, routing, dan komunikasi internal ke Auth Service |
+| Auth Service | `bidmart-auth-service` | Login, token/session handling, gRPC endpoint, dan akses ke Auth DB |
+| Deployment | `bidmart-deployment` | Docker Compose, environment configuration, smoke test, dan dokumentasi arsitektur |
+
+### Individual Component Diagram
+
+> TODO: Tambahkan gambar individual component diagram Neal.
+
+![Neal Individual Component Diagram](images/07-neal-component-diagram.png)
+
+### Code Diagram
+
+> TODO: Tambahkan code diagram Neal.
+
+![Neal Code Diagram](images/08-neal-code-diagram.png)
+
+---
+
+## 4.2 Go Nadine Audelia
+
+> TODO: Tambahkan individual component diagram dan code diagram.
+
+---
+
+## 4.3 Renata Gracia
+
+> TODO: Tambahkan individual component diagram dan code diagram.
+
+---
+
+## 4.4 Sahila Khairatul Athia
+
+> TODO: Tambahkan individual component diagram dan code diagram.
+
+---
+
+# 5. Container Diagram Summary
 
 | Aspek | Current Container Architecture | Future Container Architecture |
 |---|---|---|
@@ -137,15 +271,15 @@ Future architecture juga membuka ruang untuk penambahan komponen pendukung seper
 
 ---
 
-## Kesimpulan Container Diagram
+# 6. Kesimpulan
 
-Current container architecture menunjukkan bahwa BidMart sudah mulai dipisahkan dari monolith melalui core Auth flow:
+Current architecture menunjukkan bahwa BidMart sudah mulai dipisahkan dari monolith melalui core Auth flow:
 
 ```text
 frontend-bidmart -> bidmart-api-gateway -> bidmart-auth-service -> auth-db
 ```
 
-Future container architecture memperluas struktur tersebut menjadi microservice architecture yang lebih lengkap:
+Future architecture memperluas struktur tersebut menjadi microservice architecture yang lebih lengkap:
 
 ```text
 frontend-bidmart -> bidmart-api-gateway -> Auth / Catalog / Auction-Wallet services
