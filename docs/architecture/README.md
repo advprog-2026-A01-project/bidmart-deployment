@@ -150,13 +150,18 @@ User Browser
 
 ### Tujuan Pemisahan Service
 
-Pemisahan service pada future architecture bertujuan untuk:
+Pemisahan service pada future architecture bertujuan untuk membuat BidMart lebih modular, scalable, dan maintainable. Pada arsitektur yang terlalu terpusat, pertambahan jumlah pengguna dan fitur dapat membuat sistem sulit dikembangkan karena semua bagian saling bergantung. Jika traffic meningkat, sistem juga menjadi sulit di-scale secara spesifik karena seluruh backend harus diperlakukan sebagai satu kesatuan.
 
-- memperjelas ownership data;
-- mengurangi coupling antar-domain;
+Dengan memisahkan service berdasarkan domain, BidMart dapat memperoleh beberapa manfaat berikut:
+
+- memperjelas ownership data pada setiap domain service;
+- mengurangi coupling antar-domain seperti Auth, Catalog, dan Auction-Wallet;
 - membuat setiap service lebih mudah dikembangkan secara mandiri;
 - membuat testing lebih terisolasi;
 - membuat deployment lebih fleksibel;
+- memungkinkan service tertentu di-scale secara terpisah sesuai beban;
+- mengurangi risiko bottleneck ketika jumlah pengguna bertambah;
+- meningkatkan maintainability karena struktur sistem lebih modular;
 - mengurangi risiko perubahan pada satu fitur memengaruhi seluruh sistem.
 
 ### Pengembangan Lanjutan
