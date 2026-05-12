@@ -178,19 +178,3 @@ Frontend -> API Gateway -> Auth Service -> Auth DB
 ~~~
 
 Service Catalog, Auction-Wallet, RabbitMQ, Monitoring, dan Performance Testing akan ditambahkan pada phase berikutnya.
-
-## Future Architecture: Scaling to National Success
-Seiring dengan proyeksi pertumbuhan BidMart menjadi platform lelang skala nasional dengan ribuan transaksi per detik, arsitektur sistem akan berevolusi menjadi Fully Distributed Microservices.
-
-### Transformasi Utama:
-- Full Service Decoupling: Melakukan pemisahan fungsionalitas secara total pada modul lelang dan dompet digital (wallet) menjadi `Auction Service` dan `Wallet Service` yang independen demi kemudahan skalabilitas.
-- Event-Driven Messaging: Mengimplementasikan RabbitMQ/Kafka sebagai penyedia jalur komunikasi asinkron. Hal ini memungkinkan sistem untuk mengelola lonjakan penawaran (bid) dalam jumlah besar tanpa mengganggu performa layanan utama.
-- Real-time Performance Optimization: Pemanfaatan Redis Caching untuk menyimpan status harga tertinggi secara sementara. Ini memastikan pengguna mendapatkan pembaruan data dalam waktu sub-milidetik, sangat krusial untuk persaingan lelang di detik-detik terakhir.
-- Database Isolation: Transisi penuh ke pola Database per Service untuk memastikan kegagalan pada satu skema data tidak akan melumpuhkan seluruh ekosistem layanan.
-
-## Risk Storming & Architectural Mitigation
-Teknik Risk Storming diterapkan dalam proyek BidMart sebagai metode kolaboratif untuk memetakan potensi kegagalan teknis dan hambatan operasional pada arsitektur sistem. Dengan melakukan simulasi skenario yang ekstrem, seperti lonjakan trafik mendadak pada detik-detik terakhir lelang (sniping), kami dapat memvisualisasikan titik-titik lemah atau "hotspots" yang paling rentan terhadap gangguan. Melalui proses ini, kami berhasil mengidentifikasi bahwa ketergantungan antar modul yang terlalu ketat pada model monolitik merupakan resiko utama yang dapat menyebabkan kegagalan sistem secara menyeluruh jika terjadi beban berlebih pada salah satu fungsi.
-
-Penerapan teknik ini sangat krusial mengingat sifat platform BidMart yang sangat bergantung pada ketepatan waktu (time-sensitive) dan akurasi data finansial. Kami menemukan bahwa resiko seperti latensi tinggi saat pembaruan harga lelang dan potensi inkonsistensi data saldo pengguna menjadi ancaman jika basis data tidak diisolasi. Hasil dari analisis Risk Storming inilah yang memberikan dasar kuat bagi kami untuk melakukan refaktorisasi menuju arsitektur microservices. Dengan memisahkan tanggung jawab ke dalam layanan yang independen, kami dapat memastikan bahwa gangguan pada layanan pendukung tidak akan melumpuhkan proses inti lelang.
-
-Secara keseluruhan, Risk Storming membantu kami beralih dari mode reaktif menjadi proaktif dalam menangani masalah performa. Keputusan untuk mengimplementasikan pola event-driven messaging dan database per service adalah langkah mitigasi langsung dari resiko-resiko yang teridentifikasi selama sesi analisis. Dengan demikian, arsitektur masa depan BidMart dirancang bukan hanya untuk memenuhi fungsionalitas saat ini, tetapi juga memiliki ketahanan (resilience) dan fleksibilitas yang diperlukan untuk menghadapi ekspansi bisnis berskala nasional di masa mendatang.
