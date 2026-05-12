@@ -207,58 +207,8 @@ Risk storming explanation akan mencakup:
 |---|---|---|
 | TODO | TODO | TODO |
 
-# 4. Individual Work
 
-> TODO: Bagian ini diisi oleh masing-masing anggota sesuai kontribusi individual.
-
-Bagian individual menjelaskan component diagram dan code diagram dari kontribusi masing-masing anggota. Setiap anggota dapat menambahkan subsection masing-masing dengan format berikut.
-
----
-
-## 4.1 Neal Guarddin
-
-### Fokus Kontribusi
-
-| Area | Repository | Kontribusi |
-|---|---|---|
-| Frontend | `frontend-bidmart` | Alur autentikasi dari UI menuju API Gateway |
-| API Gateway | `bidmart-api-gateway` | Public entry point, routing, dan komunikasi internal ke Auth Service |
-| Auth Service | `bidmart-auth-service` | Login, token/session handling, gRPC endpoint, dan akses ke Auth DB |
-| Deployment | `bidmart-deployment` | Docker Compose, environment configuration, smoke test, dan dokumentasi arsitektur |
-
-### Individual Component Diagram
-
-> TODO: Tambahkan gambar individual component diagram Neal.
-
-![Neal Individual Component Diagram](images/07-neal-component-diagram.png)
-
-### Code Diagram
-
-> TODO: Tambahkan code diagram Neal.
-
-![Neal Code Diagram](images/08-neal-code-diagram.png)
-
----
-
-## 4.2 Go Nadine Audelia
-
-> TODO: Tambahkan individual component diagram dan code diagram.
-
----
-
-## 4.3 Renata Gracia
-
-> TODO: Tambahkan individual component diagram dan code diagram.
-
----
-
-## 4.4 Sahila Khairatul Athia
-
-> TODO: Tambahkan individual component diagram dan code diagram.
-
----
-
-# 5. Container Diagram Summary
+# 4. Container Diagram Summary
 
 | Aspek | Current Container Architecture | Future Container Architecture |
 |---|---|---|
@@ -274,7 +224,7 @@ Bagian individual menjelaskan component diagram dan code diagram dari kontribusi
 
 ---
 
-# 6. Kesimpulan
+# 5. Kesimpulan
 
 Current architecture menunjukkan bahwa BidMart sudah mulai dipisahkan dari monolith melalui core Auth flow:
 
