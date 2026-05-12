@@ -240,6 +240,7 @@ Bagian individual menjelaskan component diagram dan code diagram dari kontribusi
 
 ---
 
+
 ## 4.2 Go Nadine Audelia
 
 > TODO: Tambahkan individual component diagram dan code diagram.
