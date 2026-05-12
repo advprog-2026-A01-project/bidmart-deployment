@@ -186,24 +186,20 @@ Future architecture BidMart memisahkan backend menjadi beberapa service yang mas
 
 # 3. Risk Storming Explanation
 
-> TODO: Bagian ini diisi oleh anggota yang mengerjakan risk storming explanation.
+Teknik Risk Storming diterapkan pada proyek BidMart sebagai metode kolaboratif untuk mengidentifikasi "hotspots" atau titik-titik kritis dalam arsitektur yang memiliki risiko kegagalan tinggi saat sistem sukses besar. Melalui proses ini, kami mensimulasikan berbagai skenario ekstrem, seperti lonjakan trafik pada detik-detik terakhir lelang (bid sniping) dan potensi kegagalan transaksi saldo. Identifikasi risiko ini sangat krusial bagi sistem yang bersifat time-sensitive seperti BidMart, di mana latensi milidetik dapat mempengaruhi integritas hasil lelang dan kepercayaan pengguna terhadap platform.
 
-Bagian ini akan menjelaskan hasil risk storming terhadap current architecture BidMart dan bagaimana hasil tersebut memengaruhi rancangan future architecture.
+Salah satu hasil utama dari analisis Risk Storming adalah mitigasi terhadap risiko Distributed Transaction Failure. Kami menyimpulkan bahwa memisahkan layanan lelang dan dompet digital ke dalam dua microservice berbeda di fase ini memiliki risiko tinggi terhadap inkonsistensi data, di mana saldo pengguna mungkin terpotong namun penawaran gagal tercatat. Oleh karena itu, modifikasi arsitektur masa depan dilakukan dengan menggabungkan keduanya ke dalam `Auction-Wallet Service`. Dengan mengidentifikasi risiko ini lebih awal, kami dapat merancang sistem yang lebih tangguh dengan isolasi data yang tepat namun tetap menjaga keandalan pada operasi finansial yang kritis.
 
-Risk storming explanation akan mencakup:
+Secara keseluruhan, Risk Storming memberikan justifikasi teknis yang kuat bagi evolusi arsitektur kami. Teknik ini memastikan bahwa perubahan dari monolitik ke microservices bukan sekadar mengikuti tren, melainkan solusi nyata untuk memitigasi risiko skalabilitas dan keamanan data. Dengan pendekatan proaktif ini, BidMart dirancang untuk memiliki ketahanan (resilience) yang diperlukan untuk menghadapi ekspansi fitur di masa depan, seperti lelang aset perusahaan yang kompleks maupun lelang beasiswa berskala nasional.
 
-- risiko utama pada current architecture;
-- dampak dari setiap risiko terhadap sistem;
-- alasan perubahan menuju future architecture;
-- hubungan antara risiko yang ditemukan dan modifikasi arsitektur yang diusulkan.
-
-## Hasil Risk Storming
-
-> TODO: Tambahkan tabel hasil risk storming.
+### Hasil Risk Storming
 
 | Risiko pada Current Architecture | Dampak | Modifikasi pada Future Architecture |
 |---|---|---|
-| TODO | TODO | TODO |
+| Single Database Bottleneck | Lonjakan trafik lelang dapat mengganggu performa modul lain (Auth/Katalog) karena berbagi database yang sama. | Implementasi Database per Service untuk mengisolasi beban kerja tiap modul. |
+| Distributed Transaction Inconsistency | Jika Auction dan Wallet terpisah, kegagalan jaringan saat bid dapat mengakibatkan saldo terpotong tapi bid tidak tercatat. | Menggabungkan modul Auction dan Wallet ke dalam satu Auction-Wallet Service untuk menjaga atomisitas transaksi. |
+| High Latency pada Update Harga | Pengguna melihat harga yang tidak akurat (stale data) saat persaingan ketat di menit-menit akhir. | Penggunaan Redis Caching dan Message Broker (RabbitMQ) untuk pembaruan harga secara real-time dan asinkron. |
+| Cascading Failure | Kesalahan pada modul pendukung dapat melumpuhkan seluruh sistem lelang yang sedang berjalan. | Penerapan Microservice Architecture dengan API Gateway sehingga kegagalan satu service tidak mematikan service lainnya. |
 
 # 4. Individual Work
 
