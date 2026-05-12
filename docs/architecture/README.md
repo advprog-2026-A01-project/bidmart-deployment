@@ -209,9 +209,16 @@ Risk storming explanation akan mencakup:
 
 # 4. Individual Work
 
-> TODO: Bagian ini diisi oleh masing-masing anggota sesuai kontribusi individual.
+Bagian individual menjelaskan component diagram dan code diagram dari kontribusi masing-masing anggota. Setiap anggota dapat menambahkan diagram individual sesuai scope pekerjaannya masing-masing.
 
-Bagian individual menjelaskan component diagram dan code diagram dari kontribusi masing-masing anggota. Setiap anggota dapat menambahkan subsection masing-masing dengan format berikut.
+Individual work tetap dikaitkan dengan group container diagram. Artinya, setiap diagram individual harus menjelaskan bagian tertentu dari container architecture BidMart, bukan menggambar ulang seluruh sistem.
+
+Format umum individual work:
+
+- satu individual component diagram;
+- satu atau lebih code diagram;
+- penjelasan korelasi dengan group container diagram;
+- link commit individual.
 
 ---
 
@@ -219,43 +226,142 @@ Bagian individual menjelaskan component diagram dan code diagram dari kontribusi
 
 ### Fokus Kontribusi
 
+Bagian individual Neal berfokus pada core authentication flow dan deployment integration yang sudah menjadi bagian dari current architecture BidMart.
+
 | Area | Repository | Kontribusi |
 |---|---|---|
 | Frontend | `frontend-bidmart` | Alur autentikasi dari UI menuju API Gateway |
-| API Gateway | `bidmart-api-gateway` | Public entry point, routing, dan komunikasi internal ke Auth Service |
-| Auth Service | `bidmart-auth-service` | Login, token/session handling, gRPC endpoint, dan akses ke Auth DB |
+| API Gateway | `bidmart-api-gateway` | Public entry point, routing, security boundary, dan komunikasi internal ke Auth Service |
+| Auth Service | `bidmart-auth-service` | Login, register, token/session handling, JWT/JWKS, gRPC endpoint, dan akses ke Auth DB |
 | Deployment | `bidmart-deployment` | Docker Compose, environment configuration, smoke test, dan dokumentasi arsitektur |
+
+### Korelasi dengan Group Container Diagram
+
+Pada group container diagram, core flow yang berhubungan langsung dengan kontribusi Neal adalah:
+
+```text
+frontend-bidmart -> bidmart-api-gateway -> bidmart-auth-service -> auth-db
+```
+
+Individual component diagram dan code diagrams memperluas flow tersebut dengan menunjukkan detail internal dari frontend authentication flow, API Gateway routing/security, Auth Service, dan deployment configuration.
 
 ### Individual Component Diagram
 
-> TODO: Tambahkan gambar individual component diagram Neal.
+![Neal Individual Component Diagram](images/07-neal-individual-component-diagram.png)
 
-![Neal Individual Component Diagram](images/07-neal-component-diagram.png)
+Diagram ini menunjukkan hubungan antara komponen frontend, API Gateway, Auth Service, dan `auth-db`. Diagram ini merupakan perluasan dari group container diagram pada bagian authentication flow.
 
-### Code Diagram
+### Code Diagram: Frontend Auth Flow
 
-> TODO: Tambahkan code diagram Neal.
+![Neal Frontend Auth Flow Code Diagram](images/08-neal-code-frontend-auth-flow.png)
 
-![Neal Code Diagram](images/08-neal-code-diagram.png)
+Diagram ini menunjukkan bagaimana frontend mengelola login/register, auth state, token storage, dan komunikasi API menuju API Gateway.
+
+### Code Diagram: API Gateway
+
+![Neal API Gateway Code Diagram](images/09-neal-code-api-gateway.png)
+
+Diagram ini menunjukkan struktur API Gateway sebagai single public backend entry point. Gateway bertanggung jawab untuk routing, security validation, user context forwarding, dan komunikasi internal ke Auth Service.
+
+### Code Diagram: Auth Service
+
+![Neal Auth Service Code Diagram](images/10-neal-code-auth-service.png)
+
+Diagram ini menunjukkan struktur internal Auth Service, termasuk controller, security layer, service layer, repository layer, JWT/JWKS, MFA, session handling, dan akses ke `auth-db`.
+
+### Code Diagram: Deployment Configuration
+
+![Neal Deployment Code Diagram](images/11-neal-code-deployment.png)
+
+Diagram ini menunjukkan bagaimana deployment repository menghubungkan `frontend-bidmart`, `bidmart-api-gateway`, `bidmart-auth-service`, dan `auth-db` dalam Docker Compose environment.
+
+### Link Individual Work
+
+| Item | Link |
+|---|---|
+| Individual repository | `https://github.com/advprog-2026-A01-project/bidmart-auth-service` |
+| Individual commit | `TODO: masukkan link commit individual Neal` |
 
 ---
 
-
 ## 4.2 Go Nadine Audelia
 
-> TODO: Tambahkan individual component diagram dan code diagram.
+> TODO: Tambahkan individual component diagram, code diagram, dan link commit individual.
+
+### Fokus Kontribusi
+
+| Area | Repository | Kontribusi |
+|---|---|---|
+| TODO | TODO | TODO |
+
+### Individual Component Diagram
+
+![Go Nadine Individual Component Diagram](images/12-nadine-component-diagram.png)
+
+### Code Diagram
+
+![Go Nadine Code Diagram](images/13-nadine-code-diagram.png)
+
+### Link Individual Work
+
+| Item | Link |
+|---|---|
+| Individual repository | `TODO` |
+| Individual commit | `TODO` |
 
 ---
 
 ## 4.3 Renata Gracia
 
-> TODO: Tambahkan individual component diagram dan code diagram.
+> TODO: Tambahkan individual component diagram, code diagram, dan link commit individual.
+
+### Fokus Kontribusi
+
+| Area | Repository | Kontribusi |
+|---|---|---|
+| TODO | TODO | TODO |
+
+### Individual Component Diagram
+
+![Renata Individual Component Diagram](images/14-renata-component-diagram.png)
+
+### Code Diagram
+
+![Renata Code Diagram](images/15-renata-code-diagram.png)
+
+### Link Individual Work
+
+| Item | Link |
+|---|---|
+| Individual repository | `TODO` |
+| Individual commit | `TODO` |
 
 ---
 
 ## 4.4 Sahila Khairatul Athia
 
-> TODO: Tambahkan individual component diagram dan code diagram.
+> TODO: Tambahkan individual component diagram, code diagram, dan link commit individual.
+
+### Fokus Kontribusi
+
+| Area | Repository | Kontribusi |
+|---|---|---|
+| TODO | TODO | TODO |
+
+### Individual Component Diagram
+
+![Sahila Individual Component Diagram](images/16-sahila-component-diagram.png)
+
+### Code Diagram
+
+![Sahila Code Diagram](images/17-sahila-code-diagram.png)
+
+### Link Individual Work
+
+| Item | Link |
+|---|---|
+| Individual repository | `TODO` |
+| Individual commit | `TODO` |
 
 ---
 
@@ -271,6 +377,8 @@ Bagian individual menjelaskan component diagram dan code diagram dari kontribusi
 | Komunikasi backend | Gateway ke Auth Service | Gateway ke service sesuai domain |
 | Data ownership | Masih terbatas pada Auth domain | Dipisahkan berdasarkan domain service |
 | Coupling | Lebih sederhana tetapi masih terbatas | Lebih rendah karena service dan database dipisah |
+| Scalability | Masih terbatas pada core Auth flow | Service dapat dikembangkan dan di-scale secara lebih spesifik |
+| Maintainability | Masih sederhana, tetapi akan sulit jika semua fitur bertambah dalam satu flow | Lebih maintainable karena tanggung jawab dipisahkan berdasarkan domain |
 | Pengembangan berikutnya | Integrasi service tambahan | Event bus, monitoring, dan deployment yang lebih lengkap |
 
 ---
@@ -289,4 +397,48 @@ Future architecture memperluas struktur tersebut menjadi microservice architectu
 frontend-bidmart -> bidmart-api-gateway -> Auth / Catalog / Auction-Wallet services
 ```
 
-Dengan perubahan ini, BidMart memiliki struktur yang lebih modular, lebih mudah dikembangkan, dan lebih siap untuk integrasi service tambahan pada tahap berikutnya.
+Dengan perubahan ini, BidMart memiliki struktur yang lebih modular, lebih mudah dikembangkan, dan lebih siap untuk integrasi service tambahan pada tahap berikutnya. Pemisahan service juga membantu sistem menjadi lebih scalable ketika jumlah pengguna meningkat, karena service tertentu dapat dikembangkan dan di-scale sesuai kebutuhan bebannya.
+
+---
+
+# 7. Submission Evidence
+
+Bagian ini digunakan untuk mencatat link commit yang akan dikumpulkan pada submission form.
+
+## Group Work Commits
+
+| Bagian | Commit Message | Link Commit |
+|---|---|---|
+| Commit 1 | `1. The current architecture of the group, the context, container and deployment diagram` | https://github.com/advprog-2026-A01-project/bidmart-deployment/tree/tutorial-b-architecture-risk/docs/architecture |
+| Commit 2 | `2. The future architecture of the group after risk storming` | https://github.com/advprog-2026-A01-project/bidmart-deployment/tree/tutorial-b-architecture-risk/docs/architecture |
+| Commit 3 | `3. Explanation of risk storming of the group` | https://github.com/advprog-2026-A01-project/bidmart-deployment/tree/tutorial-b-architecture-risk/docs/architecture |
+
+## Individual Work Commits
+
+| Nama | Repository             | Link Commit |
+|---|------------------------|---|
+| Neal Guarddin | `bidmart-auth-service` | https://github.com/advprog-2026-A01-project/bidmart-auth-service |
+| Neal Guarddin | `bidmart-deployment`   | https://github.com/advprog-2026-A01-project/bidmart-deployment |
+| Neal Guarddin | `frontend-bidmart`     | https://github.com/advprog-2026-A01-project/frontend-bidmart |
+| Neal Guarddin | `bidmart-api-gateway`  | https://github.com/advprog-2026-A01-project/bidmart-api-gateway |
+| Go Nadine Audelia | TODO                   | TODO |
+| Renata Gracia | TODO                   | TODO |
+| Sahila Khairatul Athia | TODO                   | TODO |
+
+---
+
+# 8. Submission Notes
+
+Project repository yang digunakan untuk group architecture documentation:
+
+```text
+https://github.com/advprog-2026-A01-project/bidmart-deployment
+```
+
+Repository individual work dapat berbeda sesuai scope masing-masing anggota. Untuk Neal, individual work dikerjakan pada:
+
+```text
+https://github.com/advprog-2026-A01-project/bidmart-auth-service
+```
+
+Pada submission form, link commit group work digunakan untuk Commit 1, Commit 2, dan Commit 3. Link commit individual work digunakan untuk Commit 4.
