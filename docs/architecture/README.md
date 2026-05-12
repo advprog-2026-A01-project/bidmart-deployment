@@ -100,11 +100,10 @@ Current architecture masih terbatas pada core Auth flow. Service berikut belum m
 
 ## 1.3 Current Deployment Diagram
 
-> TODO: Bagian ini diisi oleh anggota yang mengerjakan deployment diagram.
 
 ![Current Deployment Diagram](images/03-current-deployment.png)
 
-Current deployment diagram menjelaskan bagaimana komponen current architecture dijalankan pada environment deployment saat ini, terutama melalui Docker Compose di repository `bidmart-deployment`.
+Current architecture BidMart berjalan sebagai aplikasi monolith di atas Docker Compose pada satu host. Seluruh logika backend (Auth, Catalog, dan Auction & Wallet) terdapat dalam satu container Spring Boot yang terhubung ke satu database PostgreSQL. Frontend React dijalankan di container terpisah dengan Nginx sebagai web server. Komunikasi dari frontend ke backend dilakukan melalui HTTP REST, dan backend mengakses database melalui JDBC.
 
 ---
 
@@ -178,11 +177,10 @@ Future architecture juga membuka ruang untuk penambahan komponen pendukung seper
 
 ## 2.3 Future Deployment Diagram
 
-> TODO: Bagian ini diisi oleh anggota yang mengerjakan future deployment diagram.
 
 ![Future Deployment Diagram](images/06-future-deployment.png)
 
-Future deployment diagram menjelaskan bagaimana service-service BidMart dapat dijalankan pada environment deployment yang lebih lengkap setelah Catalog Service, Auction-Wallet Service, messaging, dan monitoring ditambahkan.
+Future architecture BidMart memisahkan backend menjadi beberapa service yang masing-masing berjalan dalam container tersendiri di atas Docker Compose. API Gateway menjadi satu-satunya entry point yang dapat diakses publik, meneruskan request ke service yang sesuai melalui gRPC. Setiap service memiliki database PostgreSQL-nya sendiri, sehingga tidak ada ketergantungan data antar service. Pemisahan ini membuat setiap service dapat dikembangkan, di-deploy, dan di-scale secara independen.
 
 ---
 
