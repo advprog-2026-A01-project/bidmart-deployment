@@ -280,30 +280,17 @@ Diagram ini menunjukkan bagaimana deployment repository menghubungkan `frontend-
 
 ## 4.2 Go Nadine Audelia
 
-> TODO: Tambahkan individual component diagram, code diagram, dan link commit individual.
-
-### Fokus Kontribusi
-
-| Area | Repository | Kontribusi |
-|---|---|---|
-| TODO | TODO | TODO |
-
 ### Individual Component Diagram
 
 ![Go Nadine Individual Component Diagram](images/12-nadine-component-diagram.png)
 
 ### Code Diagram
-
-![Go Nadine Code Diagram](images/13-nadine-code-diagram.png)
-
-### Link Individual Work
-
-| Item | Link |
-|---|---|
-| Individual repository | `TODO` |
-| Individual commit | `TODO` |
-
----
+Withdraw
+![Go Nadine Code Diagram](images/13-nadine-code-withdraw.png)
+Topup
+![Go Nadine Code Diagram](images/14-nadine-code-topup.png)
+Release Funds
+![Go Nadine Code Diagram](images/15-nadine-code-release-funds.png)
 
 ## 4.3 Renata Gracia
 
