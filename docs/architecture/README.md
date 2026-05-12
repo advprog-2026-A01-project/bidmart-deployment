@@ -46,7 +46,6 @@ Arsitektur masa depan memperluas core stack tersebut dengan menambahkan service 
 
 ## 1.1 Current Context Diagram
 
-> TODO: Bagian ini diisi oleh anggota yang mengerjakan context diagram.
 
 ![Current Context Diagram](images/01-current-context.png)
 
@@ -113,7 +112,6 @@ Current deployment diagram menjelaskan bagaimana komponen current architecture d
 
 ## 2.1 Future Context Diagram
 
-> TODO: Bagian ini diisi oleh anggota yang mengerjakan future context diagram.
 
 ![Future Context Diagram](images/04-future-context.png)
 
