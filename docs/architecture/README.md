@@ -186,23 +186,22 @@ Future deployment diagram menjelaskan bagaimana service-service BidMart dapat di
 
 > TODO: Bagian ini diisi oleh anggota yang mengerjakan risk storming explanation.
 
-Risk storming diterapkan untuk mengevaluasi risiko dari arsitektur BidMart saat ini. Pada current architecture, sistem sudah mulai dipisahkan dari monolith menjadi core microservice flow, yaitu Frontend, API Gateway, Auth Service, dan Auth DB. Namun, arsitektur ini masih berada pada tahap awal karena service Catalog, Auction-Wallet, messaging, dan monitoring belum sepenuhnya menjadi bagian dari deployment terintegrasi.
+Bagian ini akan menjelaskan hasil risk storming terhadap current architecture BidMart dan bagaimana hasil tersebut memengaruhi rancangan future architecture.
 
-Risiko utama pada current architecture adalah API Gateway menjadi titik pusat seluruh request, Auth Service menjadi dependency utama untuk alur autentikasi, dan belum adanya observability yang cukup ketika terjadi error antar-service. Selain itu, ketika Catalog dan Auction-Wallet mulai diintegrasikan, komunikasi antar-service dapat menimbulkan risiko baru seperti cascading failure, data inconsistency, dan kesulitan debugging jika tidak ada event bus dan monitoring.
+Risk storming explanation akan mencakup:
+
+- risiko utama pada current architecture;
+- dampak dari setiap risiko terhadap sistem;
+- alasan perubahan menuju future architecture;
+- hubungan antara risiko yang ditemukan dan modifikasi arsitektur yang diusulkan.
 
 ## Hasil Risk Storming
 
+> TODO: Tambahkan tabel hasil risk storming.
+
 | Risiko pada Current Architecture | Dampak | Modifikasi pada Future Architecture |
 |---|---|---|
-| API Gateway menjadi pusat semua request | Gateway dapat menjadi bottleneck dan single entry risk | Gateway tetap menjadi entry point, tetapi routing diperjelas ke service yang terpisah |
-| Core deployment baru stabil pada Auth flow | Catalog dan Auction-Wallet belum terintegrasi penuh | Menambahkan Catalog Service dan Auction-Wallet Service ke rancangan deployment |
-| Auth, Catalog, dan Auction memiliki kebutuhan data berbeda | Ownership data kurang jelas jika data digabung | Setiap service memiliki database masing-masing |
-| Komunikasi antar-service dapat menyebabkan cascading failure | Error pada satu service dapat memengaruhi service lain | Menggunakan komunikasi asynchronous melalui RabbitMQ untuk event tertentu |
-| Event penting seperti bid update atau auction update sulit disebarkan | Service lain sulit menerima perubahan state secara reliable | Menambahkan event bus untuk publish/consume event |
-| Runtime error sulit didiagnosis | Debugging dan evaluasi reliability menjadi sulit | Menambahkan Prometheus dan Grafana untuk observability |
-| Deployment semakin kompleks saat service bertambah | Konfigurasi environment dan networking rawan salah | Repository deployment menjadi pusat konfigurasi Docker Compose |
-
----
+| TODO | TODO | TODO |
 
 # 4. Individual Work
 
